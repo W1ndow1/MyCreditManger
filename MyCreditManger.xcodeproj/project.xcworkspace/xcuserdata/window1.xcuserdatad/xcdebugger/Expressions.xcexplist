@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "ProcessInput.addGrade(_:):ProcessInput.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "stList">
+            </PersistentString>
+            <PersistentString
+               value = "stList.students">
+            </PersistentString>
+            <PersistentString
+               value = "stInfo">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProcessInput.start():ProcessInput.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "stLsit">
+            </PersistentString>
+            <PersistentString
+               value = "stList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProcessInput.deleteStudent(_:):ProcessInput.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "stList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProcessInput.addStudent(_:):ProcessInput.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "stInfo">
+            </PersistentString>
+            <PersistentString
+               value = "stList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ProcessInput.viewGrade(_:):ProcessInput.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "stList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
