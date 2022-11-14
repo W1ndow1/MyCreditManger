@@ -106,18 +106,8 @@ class ProcessInput
         if(temp.count == 3 && gradeToPoint.contains(where: {$0.key == temp[2].uppercased()})){
             //해당하는 학생이 있는 경우 성적 추가하기 이때 기존정보가 있다면 수정하기
             if let stuIndex = stList.students.firstIndex(where: {$0.name == temp[0]}){
-                //과목이 있는 경우 점수 덮어 쓰기
-                //stList.students[stuIndex].subjectAndGrade.updateValue(temp[2], forKey: temp[1])
-                
-                if let subIndex = stList.students[stuIndex].subject.firstIndex(of: temp[1]){
-                    stList.students[stuIndex].grade[subIndex] = (gradeToPoint[temp[2]])!
-                }
-                //과목이 없는 경우 과목, 점수 추가
-                else{
-                    stList.students[stuIndex].subjectAndGrade.updateValue(temp[2], forKey: temp[1])
-                    stList.students[stuIndex].subject.append(temp[1])
-                    stList.students[stuIndex].grade.append(gradeToPoint[temp[2]]!)
-                }
+                //과목이 있는 경우 점수 덮어 쓰고 없으면 새로 입력
+                stList.students[stuIndex].subjectAndGrade.updateValue(temp[2], forKey: temp[1])
                 print("\(temp[0]) 학생의 \(temp[1]) 과목이 \(temp[2])로 추가(변경)되었습니다.")
             }
             else{
@@ -134,9 +124,7 @@ class ProcessInput
         let temp: [String] = value.components(separatedBy: " ")
         if temp.count == 2{
             if let stuIndex = stList.students.firstIndex(where: {$0.name == temp[0]}){
-                guard let subIndex = stList.students[stuIndex].subject.firstIndex(of: temp[1]) else { return }
-                stList.students[stuIndex].subject.remove(at: subIndex)
-                stList.students[stuIndex].grade.remove(at: subIndex)
+                stList.students[stuIndex].subjectAndGrade.removeValue(forKey: temp[1])
                 print("\(temp[0]) 학생의 \(temp[1]) 과목의 성적이 삭제되었습니다.")
             }
             else{
@@ -154,13 +142,12 @@ class ProcessInput
         //(1)입력이 올바른지, (2)입력된 학생이 있는지 확인, (3)확인 후 점수 보여주기
         if !name.isEmpty || Int(name) == nil {
             if let stuIndex = stList.students.firstIndex(where: {$0.name == name}){
-                for subject in stList.students[stuIndex].subject{
-                    for gradePoint in stList.students[stuIndex].grade{
-                        print("\(subject) : \(String(describing: gradeToPoint.someKey(forValue: gradePoint)!))")
-                        break;
-                    }
+                var average: Double = 0.0
+                for gradeDic in stList.students[stuIndex].subjectAndGrade{
+                    average += Double(gradeToPoint[gradeDic.value] ?? 0.0)
+                    print("\(gradeDic.key): \(gradeDic.value)")
                 }
-                print("평점 : \(stList.students[stuIndex].average!)")
+                print("평점: \(average / Double(stList.students[stuIndex].subjectAndGrade.count))")
             }
             else{
                 print("\(name) 학생을 찾지 못했습니다.")
@@ -172,10 +159,3 @@ class ProcessInput
         }
     }
 }
-
-extension Dictionary where Value: Equatable{
-    func someKey(forValue val: Value) -> Key? {
-        return first(where: { $1 == val})?.key
-    }
-}
-

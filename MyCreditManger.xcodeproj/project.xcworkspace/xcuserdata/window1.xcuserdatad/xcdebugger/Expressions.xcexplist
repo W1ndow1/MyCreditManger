@@ -50,6 +50,9 @@
          contextName = "ProcessInput.viewGrade(_:):ProcessInput.swift">
          <PersistentStrings>
             <PersistentString
+               value = "Double(gradeToPoint[gradeDic.value] ?? 0.0)">
+            </PersistentString>
+            <PersistentString
                value = "stList">
             </PersistentString>
          </PersistentStrings>
