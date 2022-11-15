@@ -140,12 +140,12 @@ class ProcessInput
         //(1)입력이 올바른지, (2)입력된 학생이 있는지 확인, (3)확인 후 점수 보여주기
         if !name.isEmpty || Int(name) == nil {
             if let stuIndex = stList.students.firstIndex(where: {$0.name == name}){
-                var sum: Double = 0.0
+                var average: Double = 0.0
                 for gradeDic in stList.students[stuIndex].subjectAndGrade{
-                    sum += Double(gradeToPoint[gradeDic.value] ?? 0.0)
+                    average += Double(gradeToPoint[gradeDic.value] ?? 0.0)
                     print("\(gradeDic.key): \(gradeDic.value)")
                 }
-                print("평점: \(sum == 0 ? 0.0 : sum / Double(stList.students[stuIndex].subjectAndGrade.count))")
+                print("평점: \(average / Double(stList.students[stuIndex].subjectAndGrade.count))")
             }
             else{
                 print("\(name) 학생을 찾지 못했습니다.")
