@@ -17,8 +17,8 @@ enum MenuType : String{
 }
 
 //MARK: - Start
-var stInfo = Student()  //학생정보 속성
-var stList = StudentList(students: [stInfo])//학생들
+var stInfo = Student()
+var stList = StudentList(students: [stInfo])
 let process = ProcessInput()
 var value = ""
 while(value != MenuType.exit.rawValue)
