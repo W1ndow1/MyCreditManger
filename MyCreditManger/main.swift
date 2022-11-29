@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MenuType : String{
+enum MenuType: String {
     case addStudent = "1"
     case deleteStudent = "2"
     case addGrade = "3"
@@ -15,14 +15,13 @@ enum MenuType : String{
     case viewAverage = "5"
     case exit = "X"
 }
-
 //MARK: - Start
 var stInfo = Student()
 var stList = StudentList(students: [stInfo])
-let process = ProcessInput()
 var value = ""
-while(value != MenuType.exit.rawValue)
-{
+let process = ProcessInput()
+
+while(value != MenuType.exit.rawValue) {
    value = process.start()
 }
 

@@ -7,56 +7,54 @@
 
 import Foundation
 
-class ProcessInput
-{
+class ProcessInput {
     var menuValue: String?
-    var stuValue: String?
-    let gradeToPoint:[String: Double] = ["A+" : 4.5, "A" : 4.0,
+    var inputValue: String?
+    let gradeToPoint:[String : Double] = ["A+" : 4.5, "A" : 4.0,
                                          "B+" : 3.5, "B" : 3.0,
                                          "C+" : 2.5, "C" : 2.0,
                                          "D+" : 1.5, "D" : 1,
                                          "F" : 0]
-    //프로그램 시작
+    //MARK: - 입력정보 분기
     func start() -> String {
         print("""
               원하는 기능을 입력해 주세요
               1: 학생추가, 2: 학생삭제, 3: 성적추가(변경), 4: 성적삭제, 5: 평점보기, X:종료
               """)
         menuValue = readLine()
-        //들어온 입력 구분하기
         switch menuValue?.uppercased() {
         case MenuType.addStudent.rawValue:
             print("추가할 학생의 이름을 입력해주세요")
-            stuValue = readLine()
-            addStudent(stuValue ?? "")
+            inputValue = readLine()
+            addStudent(inputValue ?? "")
             break
         case MenuType.deleteStudent.rawValue:
             print("삭제할 학생의 이름을 입력해주세요")
-            stuValue = readLine()
-            deleteStudent(stuValue ?? "")
-            break;
+            inputValue = readLine()
+            deleteStudent(inputValue ?? "")
+            break
         case MenuType.addGrade.rawValue:
             print("""
                   성적을 추가할 학생의 이름, 과목 이름, 성적(A+, A, F 등)을 띄어쓰기로 구분하여 차례로 작성해 주세요"
                   입력예) Mickey Swift A+"
                   만약 학생의 성적 중 해당 과목이 존재하면 기존 점수가 갱신됩니다.
                   """)
-            stuValue = readLine()
-            addGrade(stuValue ?? "")
-            break;
+            inputValue = readLine()
+            addGrade(inputValue ?? "")
+            break
         case MenuType.deleteGrade.rawValue:
             print("""
                   성적을 삭제할 학생의 이름, 과목 이름 띄어쓰기로 구분하여 차례로 작성해주세요.
                   입력예) Mickey Swift
                   """)
-            stuValue = readLine()
-            deleteGrade(stuValue ?? "")
+            inputValue = readLine()
+            deleteGrade(inputValue ?? "")
             break
         case MenuType.viewAverage.rawValue:
             print("평점을 알고 싶은 학생의 이름을 입력해 주세요")
-            stuValue = readLine()
-            viewGrade(stuValue ?? "")
-            break;
+            inputValue = readLine()
+            viewGrade(inputValue ?? "")
+            break
         case MenuType.exit.rawValue:
             print("프로그램을 종료합니다.")
         default:
@@ -65,81 +63,53 @@ class ProcessInput
         return menuValue!.uppercased()
     }
 
-    //MARK: - 학생추가
-    func addStudent(_ name: String){
-        if(Int(name) != nil){
-            print("입력이 잘못되었습니다.")
-        }
-        if(stList.students.contains(where: {$0.name == name})){
-            print("\(name)은 이미 존재하는 학생입니다. 추가하지 않습니다.")
-        }
-        else{
-            stInfo.name = name
-            stList.students.append(stInfo)
-            print("\(String(describing: stInfo.name!)) 학생을 추가 했습니다.")
-        }
+    //MARK: - 입력정보 처리
+    func addStudent(_ name: String?) {
+        guard let name = name else {
+            return print("입력이 잘못되었습니다.") }
+        guard !stList.students.contains(where: { $0.name == name }) else {
+            return print("\(name)은 이미 존재하는 학생입니다. 추가하지 않습니다.") }
+        stInfo.name = name
+        stList.students.append(stInfo)
+        print("\(String(describing: stInfo.name!)) 학생을 추가 했습니다.")
     }
-    //MARK: - 학생삭제
-    func deleteStudent(_ name: String){
-        if let index = stList.students.firstIndex(where: {$0.name == name}){
-            stList.students.remove(at: index)
-            print("\(name) 학생을 삭제하였습니다.")
-        }
-        else{
-            print("\(name) 학생을 찾지 못했습니다.")
-        }
+    
+    func deleteStudent(_ name: String) {
+        guard let index = stList.students.firstIndex(where: { $0.name == name }) else {
+            return print("\(name) 학생을 찾지 못했습니다.") }
+        stList.students.remove(at: index)
+        print("\(name) 학생을 삭제 하였습니다.")
     }
-    //MARK: - 성적추가
-    func addGrade(_ value: String) -> Void {
-        let temp: [String] = value.components(separatedBy: " ")//입력된값 확인
-        if(temp.count == 3 && gradeToPoint.contains(where: {$0.key == temp[2].uppercased()})){
-            if let stuIndex = stList.students.firstIndex(where: {$0.name == temp[0]}){
-                stList.students[stuIndex].subjectAndGrade.updateValue(temp[2], forKey: temp[1])
-                print("\(temp[0]) 학생의 \(temp[1]) 과목이 \(temp[2])로 추가(변경)되었습니다.")
-            }
-            else{
-                print("입력이 잘못되었습니다. 다시 확인해주세요.")
-            }
-        }
-        else{
-            print("입력이 잘못되었습니다. 다시 확인해주세요.")
-        }
+    
+    func addGrade(_ value: String) {
+        let input: [String] = value.components(separatedBy: " ")
+        guard input.count == 3 && gradeToPoint.contains(where: { $0.key == input[2].uppercased() }) else {
+            return print("입력이 잘못되었습니다. 다시 확인해주세요") }
+        guard let index = stList.students.firstIndex(where: { $0.name == input[0] }) else {
+            return print("입력이 잘못되었습니다. 다시 확인해주세요.") }
+        stList.students[index].subjectAndGrade.updateValue(input[2], forKey: input[1])
+        print("\(input[0]) 학생의 \(input[1]) 과목이 \(input[2])로 추가(변경)되었습니다.")
     }
-    //MARK: - 성적삭제
-    func deleteGrade(_ value: String) -> Void {
-        //(1)입력값이 올바른지 확인,(2)학생이 있는지 확인, (3)삭제할 성적이 없는 경우
-        let temp: [String] = value.components(separatedBy: " ")
-        if temp.count == 2{
-            if let stuIndex = stList.students.firstIndex(where: {$0.name == temp[0]}){
-                stList.students[stuIndex].subjectAndGrade.removeValue(forKey: temp[1])
-                print("\(temp[0]) 학생의 \(temp[1]) 과목의 성적이 삭제되었습니다.")
-            }
-            else{
-                print("\(temp[0]) 학생을 찾지 못했습니다.")
-            }
-        }
-        else
-        {
-            print("입력이 잘못되었습니다. 다시 확인해주세요.")
-        }
+    
+    func deleteGrade(_ value: String) {
+        let input: [String] = value.components(separatedBy: " ")
+        guard input.count == 2 else {
+            return print("입력이 잘못되었습니다. 다시 확인해주세요.") }
+        guard let index = stList.students.firstIndex(where: { $0.name == input[0] }) else {
+            return print("\(input[0]) 학생을 찾지 못했습니다.") }
+        stList.students[index].subjectAndGrade.removeValue(forKey: input[1])
+        print("\(input[0]) 학생의 \(input[1]) 과목의 성적이 삭제되었습니다.")
     }
-    //MARK: - 평점보기
-    func viewGrade(_ name: String) -> Void{
-        if !name.isEmpty || Int(name) == nil {
-            if let stuIndex = stList.students.firstIndex(where: {$0.name == name}){
-                var sum: Double = 0.0
-                for gradeDic in stList.students[stuIndex].subjectAndGrade{
-                    sum += Double(gradeToPoint[gradeDic.value] ?? 0.0)
-                    print("\(gradeDic.key): \(gradeDic.value)")
-                }
-                print("평점: \( sum == 0.0 ? "0.0" : String(format: "%.2f", sum / Double(stList.students[stuIndex].subjectAndGrade.count)))")
-            }
-            else{
-                print("\(name) 학생을 찾지 못했습니다.")
-            }
-        }
-        else{
-            print("입력이 잘못되었습니다. 다시 확인해주세요.")
-        }
+    
+    func viewGrade(_ name: String?) {
+        guard let name = name else {
+            return print("입력이 잘못되었습니다. 다시 확인해 주세요") }
+        guard let index = stList.students.firstIndex(where: { $0.name == name }) else {
+            return print("\(name) 학생을 찾지 못했습니다.") }
+        
+        let gradeValue = stList.students[index].subjectAndGrade
+        let sumPoint = gradeValue.map( { gradeToPoint[$0.value] ?? 0.0 }).reduce(0, +)
+        print(gradeValue.map( {"\($0.key): \($0.value)"} ))
+        print("평점 \(sumPoint == 0.0 ? "0.0" : String(format: "%.2f", sumPoint / Double(gradeValue.count)))")
     }
 }
